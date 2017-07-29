@@ -1,0 +1,10 @@
+{
+    "apiUrl": "%s(apiUrl)",
+    "accessToken": "%s(accessToken)",
+    "blocking" : "true",
+    "folderId" : "%s(folderId)",
+    "pageSize":"%s(pageSize)",
+    "q":"%s(q)",
+    "sort":"%s(sort)"
+
+}

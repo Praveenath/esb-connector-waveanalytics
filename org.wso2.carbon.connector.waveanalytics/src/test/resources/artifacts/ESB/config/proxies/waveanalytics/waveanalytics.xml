@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ~  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~  WSO2 Inc. licenses this file to you under the Apache License,
+ ~  Version 2.0 (the "License"); you may not use this file except
+ ~  in compliance with the License.
+ ~  You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~  Unless required by applicable law or agreed to in writing,
+ ~  software distributed under the License is distributed on an
+ ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~  KIND, either express or implied.  See the License for the
+ ~  specific language governing permissions and limitations
+ ~  under the License.
+-->
+
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="waveanalytics"
+       transports="https,http" statistics="disable" trace="disable"
+       startOnLoad="true">
+    <target>
+        <inSequence>
+            <property name="accessToken" expression="json-eval($.accessToken)"/>
+            <property name="apiUrl" expression="json-eval($.apiUrl)"/>
+            <property name="datasetId" expression="json-eval($.datasetId)"/>
+            <property name="versionId" expression="json-eval($.versionId)"/>
+            <property name="userOnly" expression="json-eval($.userOnly)"/>
+            <property name="query" expression="json-eval($.query)"/>
+            <property name="currentVersionId" expression="json-eval($.currentVersionId)"/>
+            <property name="predicate" expression="json-eval($.predicate)"/>
+            <property name="description" expression="json-eval($.description)"/>
+            <property name="folder" expression="json-eval($.folder)"/>
+            <property name="label" expression="json-eval($.label)"/>
+            <property name="name" expression="json-eval($.name)"/>
+            <property name="hasCurrentOnly" expression="json-eval($.hasCurrentOnly)"/>
+            <property name="folderId" expression="json-eval($.folderId)"/>
+            <property name="pageSize" expression="json-eval($.pageSize)"/>
+            <property name="q" expression="json-eval($.q)"/>
+            <property name="sort" expression="json-eval($.sort)"/>
+            <property name="blocking" expression="json-eval($.blocking)"/>
+            <waveanalytics.init>
+                <accessToken>{$ctx:accessToken}</accessToken>
+                <apiUrl>{$ctx:apiUrl}</apiUrl>
+                <waveanalyticsBlocking>{$ctx:blocking}</waveanalyticsBlocking>
+            </waveanalytics.init>
+            <switch source="get-property('transport','Action')">
+                <case regex="urn:getWaveResource">
+                    <waveanalytics.getWaveResource/>
+                </case>
+                <case regex="urn:getDatasetListResource">
+                    <waveanalytics.getDatasetListResource>
+                        <folderId>{$ctx:folderId}</folderId>
+                        <hasCurrentOnly>{$ctx:hasCurrentOnly}</hasCurrentOnly>
+                        <pageSize>{$ctx:pageSize}</pageSize>
+                        <q>{$ctx:q}</q>
+                        <sort>{$ctx:sort}</sort>
+                    </waveanalytics.getDatasetListResource>
+                </case>
+                <case regex="urn:getDatasetResource">
+                    <waveanalytics.getDatasetResource>
+                        <datasetId>{$ctx:datasetId}</datasetId>
+                    </waveanalytics.getDatasetResource>
+                </case>
+                <case regex="urn:deleteDatasetResource">
+                    <waveanalytics.deleteDatasetResource>
+                        <datasetId>{$ctx:datasetId}</datasetId>
+                    </waveanalytics.deleteDatasetResource>
+                </case>
+                <case regex="urn:updateDatasetResource">
+                    <waveanalytics.updateDatasetResource>
+                        <datasetId>{$ctx:datasetId}</datasetId>
+                        <currentVersionId>{$ctx:currentVersionId}</currentVersionId>
+                        <description>{$ctx:description}</description>
+                        <label>{$ctx:label}</label>
+                    </waveanalytics.updateDatasetResource>
+                </case>
+                <case regex="urn:getVersionsListResource">
+                    <waveanalytics.getVersionsListResource>
+                        <datasetId>{$ctx:datasetId}</datasetId>
+                    </waveanalytics.getVersionsListResource>
+                </case>
+                <case regex="urn:getVersionResource">
+                    <waveanalytics.getVersionResource>
+                        <datasetId>{$ctx:datasetId}</datasetId>
+                        <versionId>{$ctx:versionId}</versionId>
+                    </waveanalytics.getVersionResource>
+                </case>
+                <case regex="urn:updateVersionResource">
+                    <waveanalytics.updateVersionResource>
+                        <datasetId>{$ctx:datasetId}</datasetId>
+                        <versionId>{$ctx:versionId}</versionId>
+                        <predicate>{$ctx:predicate}</predicate>
+                    </waveanalytics.updateVersionResource>
+                </case>
+                <case regex="urn:getXmdListResource">
+                    <waveanalytics.getXmdListResource>
+                        <datasetId>{$ctx:datasetId}</datasetId>
+                        <versionId>{$ctx:versionId}</versionId>
+                    </waveanalytics.getXmdListResource>
+                </case>
+                <case regex="urn:getXmdResource">
+                    <waveanalytics.getXmdResource>
+                        <datasetId>{$ctx:datasetId}</datasetId>
+                        <versionId>{$ctx:versionId}</versionId>
+                        <userOnly>{$ctx:userOnly}</userOnly>
+                    </waveanalytics.getXmdResource>
+                </case>
+                <case regex="urn:getDashboardListResource">
+                    <waveanalytics.getDashboardListResource>
+                        <folderId>{$ctx:folderId}</folderId>
+                        <pageSize>{$ctx:pageSize}</pageSize>
+                        <q>{$ctx:q}</q>
+                        <sort>{$ctx:sort}</sort>
+                    </waveanalytics.getDashboardListResource>
+                </case>
+                <case regex="urn:getQueryResource">
+                    <waveanalytics.getQueryResource>
+                        <query>{$ctx:query}</query>
+                    </waveanalytics.getQueryResource>
+                </case>
+            </switch>
+            <respond/>
+        </inSequence>
+    </target>
+    <description/>
+</proxy>

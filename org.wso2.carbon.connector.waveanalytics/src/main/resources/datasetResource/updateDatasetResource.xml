@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~   WSO2 Inc. licenses this file to you under the Apache License,
+  ~   Version 2.0 (the "License"); you may not use this file except
+  ~   in compliance with the License.
+  ~   You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+-->
+<template xmlns="http://ws.apache.org/ns/synapse" name="updateDatasetResource">
+    <parameter name="datasetId" description="Dataset id to be retrieved"/>
+    <parameter name="currentVersionId" description="The ID of the current version of this dataset"/>
+    <parameter name="description" description="The description of the dataset."/>
+    <parameter name="folder"
+               description="The 18-character ID of the folder that contains the dataset. To patch the folder, you must have edit access to the current and new folders."/>
+    <parameter name="label" description="The label of the dataset."/>
+    <parameter name="name" description="The name of the dataset."/>
+    <sequence>
+        <header name="Accept-Encoding" action="remove" scope="transport"/>
+        <property name="uri.var.datasetId" expression="$func:datasetId"/>
+        <property name="uri.var.currentVersionId" expression="$func:currentVersionId"/>
+        <property name="uri.var.description" expression="$func:description"/>
+        <property name="uri.var.folder" expression="$func:folder"/>
+        <property name="uri.var.label" expression="$func:label"/>
+        <property name="uri.var.name" expression="$func:name"/>
+        <payloadFactory media-type="json">
+            <format>
+                {
+                "currentVersionId":"$1",
+                "description":"$2",
+                "label":"$3"
+                }
+            </format>
+            <args>
+                <arg evaluator="xml" expression="$func:currentVersionId"/>
+                <arg evaluator="xml" expression="$func:description"/>
+                <arg evaluator="xml" expression="$func:label"/>
+            </args>
+        </payloadFactory>
+        <filter source="$ctx:waveanalyticsBlocking" regex="true">
+            <then>
+                <call blocking="true">
+                    <endpoint>
+                        <http method="PATCH"
+                              uri-template="{uri.var.sfwave.apiUrl}/wave/datasets/{+uri.var.datasetId}"/>
+                    </endpoint>
+                </call>
+            </then>
+            <else>
+                <call>
+                    <endpoint>
+                        <http method="PATCH"
+                              uri-template="{uri.var.sfwave.apiUrl}/wave/datasets/{+uri.var.datasetId}"/>
+                    </endpoint>
+                </call>
+            </else>
+        </filter>
+        <header name="Cache-Control" scope="transport" action="remove"/>
+        <header name="Content-Encoding" scope="transport" action="remove"/>
+        <header name="Content-Length" scope="transport" action="remove"/>
+        <header name="Content-Type" scope="transport" action="remove"/>
+        <header name="Date" scope="transport" action="remove"/>
+        <header name="Vary" scope="transport" action="remove"/>
+    </sequence>
+</template>

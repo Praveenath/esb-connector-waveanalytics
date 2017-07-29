@@ -1,0 +1,8 @@
+{
+  "apiUrl": "%s(apiUrl)",
+  "accessToken": "%s(accessToken)",
+  "blocking": "true",
+  "datasetId": "%s(datasetId)",
+  "versionId": "%s(versionId)",
+  "predicate": "%s(predicate)"
+}
